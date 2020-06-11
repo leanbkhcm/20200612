@@ -1,0 +1,79 @@
+<div class="card-body">
+                    <div ng-repeat="arrayFunctionCommand in arrayFunctionCommandsFromProject">
+                        @*<div class="col-sm column-verticallineMiddle  form-inline" style="vertical-align:middle;  ">
+                            <label class="switch">
+                                <input type="checkbox"
+                                       value="{{arrayFunctionCommand.functionID}}"
+                                       ng-checked="listCheckedFunctions.indexOf(arrayFunctionCommand.functionID) > -1"
+                                       ng-click="handleClickFunction(arrayFunctionCommand)"
+                                       ng-disabled="checkBox.status == 'disabled'">
+                                <span class="slider round"></span>
+                            </label>
+
+                            {{arrayFunctionCommand.functionName}}
+                        </div>*@
+
+                        @*<div class="row">
+                        <div 
+                             ng-repeat="admCommand in arrayFunctionCommand.admCommands"
+                             class="col-sm-3 column-verticallineMiddle  form-inline" style="vertical-align:middle;  ">
+                            <label class="switch">
+                                <input type="checkbox"
+                                       value="{{admCommand.commandID}}"
+                                       ng-checked="listCheckedCommands.indexOf(admCommand.commandID) > -1"
+                                       ng-click="handleClickCommand(admCommand)"
+                                       ng-disabled="checkBox.status == 'disabled'">
+                                <span class="slider round"></span>
+                            </label>
+
+                            <label> {{admCommand.commandCode}}</label>
+                        </div>
+                        </div>*@
+
+
+
+                            <table datatables="" id="tableAllFunctionCommands" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="column-verticallineMiddle form-inline" style="vertical-align:middle; text-align: center">
+
+                                        <label class="switch">
+                                            <input type="checkbox"
+                                                   value="{{arrayFunctionCommand.functionID}}"
+                                                   ng-checked="listCheckedFunctions.indexOf(arrayFunctionCommand.functionID) > -1"
+                                                   ng-click="handleClickFunction(arrayFunctionCommand)"
+                                                   ng-disabled="checkBox.status == 'disabled'">
+                                            <span class="slider round"></span>
+                                        </label>
+
+                                        {{arrayFunctionCommand.functionName}}
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody class="row" >
+                                <tr ng-repeat="admCommand in arrayFunctionCommand.admCommands" >
+
+
+                                    <td class="column-verticallineMiddle  form-inline" style="vertical-align:middle;  ">
+
+                                        <label class="switch">
+                                            <input type="checkbox"
+                                                   value="{{admCommand.commandID}}"
+                                                   ng-checked="listCheckedCommands.indexOf(admCommand.commandID) > -1"
+                                                   ng-click="handleClickCommand(admCommand)"
+                                                   ng-disabled="checkBox.status == 'disabled'">
+                                            <span class="slider round"></span>
+                                        </label>
+
+                                        <label> {{admCommand.commandCode}}</label>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                        </div>
+
+                    </div>
