@@ -1,0 +1,536 @@
+﻿@{
+    ViewData["Title"] = "Functions";
+}
+<div ng-app="functionApp" ng-controller="functionCtrl">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <!--Functions-->
+                    <h1>{{site.lbtitle}}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">General</li>
+                        <li class="breadcrumb-item"><a href="/Project">Projects</a></li>
+                        <li class="breadcrumb-item active">Functions</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <div class="card">
+        <div class="card-header">
+            <!--Functions list-->
+            <h3 class="card-title">
+                {{site.lb_functionslist}}</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-1 col-md-2 col-sm-4 col-lg-1">
+                    <!--New-->
+                    <button ng-click="NewFunction()" class="btn btn-block btn-primary btn-sm" type="button"><i class="fa fa-plus"></i> {{site.btn_new}}</button>
+                </div>
+                <div class="col-1 col-md-2 col-sm-4 col-lg-1">
+                    <!-- Edit -->
+                    <button ng-click="EditFunction()" class="btn btn-block btn-primary btn-sm" type="button"><i class="fa fa-edit"></i> {{site.btn_edit}}</button>
+                </div>
+                <div class="col-1 col-md-2 col-sm-4 col-lg-1">
+                    <!-- Delete -->
+                    <button ng-click="DeleteFunction()" class="btn btn-block btn-primary btn-sm" type="button"><i class="fa fa-trash"></i> {{site.btn_delete}}</button>
+                </div>
+                <div class="col-1 col-md-3 col-sm-4 col-lg-2">
+                    <!-- Command list -->
+                    <button ng-click="CommandsList()" class="btn btn-block btn-primary btn-sm" type="button"><i class="fa fa-cube"></i> {{site.btn_commands}}</button>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+            <!-- Project -->
+                <div class="col-1 col-md-2 col-sm-4 col-lg-2">{{site.lb_project}}:</div>
+                <div class="col-2">
+                    <ui-select ng-change="LoadFunctions(selectedProject)" ng-model="selectedProject" theme="select2" title="Choose a project" style="width: 100%">
+                        <ui-select-match placeholder="Select a project in the list or search ...">{{selectedProject.projectName}}</ui-select-match>
+                <ui-select-choices repeat="project in projects | propsFilter: {projectName: $select.search, description: $select.search}">
+                    <div ng-bind-html="project.projectName | highlight: $select.search"></div>
+                    <small>
+                        
+                        <span ng-bind-html="''+project.description | highlight: $select.search"></span>
+                    </small>
+                </ui-select-choices>
+                </ui-select>
+                <!--
+    <select class="form-control select2bs4" style="width: 100%;">
+        <option ng-repeat="project in projects" value="{{project.projectID}}">{{ project.projectID }} - {{ project.projectName }}</option>
+    </select>
+        -->
+</div>
+            </div><br />
+                  <div class="row">
+                      <!-- Search -->
+                      <div class="col-9 col-md-8 col-sm-6 col-lg-9"></div>
+                      <div class="col-1 col-md-2 col-sm-4 col-lg-1">{{site.lb_search}}:</div>
+                      <div class="col-2"><input type="text" ng-model="searchFunction" class="form-control" /></div>
+                  </div>
+            <br />
+            <table ng-table="tableParams" datatables="" id="tableFunction" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <!--
+    <th ng-click="orderByField='functionID'; reverseSort = !reverseSort">
+        ID
+                        {{site.col_id}}
+                        <span ng-show="orderByField == 'functionID'"><i class="fa fa-arrow-up" ng-show="!reverseSort"></i><i class="fa fa-arrow-down" ng-show="reverseSort"></i></span>
+                        </th>
+                            -->
+                        <th ng-click="orderByField='functionName'; reverseSort = !reverseSort">
+                            <!--Name-->
+                            {{site.col_name}} <span ng-show="orderByField == 'functionName'"><i class="fa fa-arrow-up" ng-show="!reverseSort"></i><i class="fa fa-arrow-down" ng-show="reverseSort"></i></span>
+                        </th>
+                        <th ng-click="orderByField='functDescription'; reverseSort = !reverseSort">
+                            <!--Description-->
+                            {{site.col_description}} <span ng-show="orderByField == 'functDescription'"><i class="fa fa-arrow-up" ng-show="!reverseSort"></i><i class="fa fa-arrow-down" ng-show="reverseSort"></i></span>
+                        </th>
+                        <th ng-click="orderByField='idx'; reverseSort = !reverseSort">
+                            <!-- IDX -->
+                            {{site.col_idx}} <span ng-show="orderByField == 'idx'"><i class="fa fa-arrow-up" ng-show="!reverseSort"></i><i class="fa fa-arrow-down" ng-show="reverseSort"></i></span>
+                        </th>
+                        <th ng-click="orderByField='status'; reverseSort = !reverseSort">
+                            <!-- Status -->
+                            {{site.col_status}} <span ng-show="orderByField == 'status'"><i class="fa fa-arrow-up" ng-show="!reverseSort"></i><i class="fa fa-arrow-down" ng-show="reverseSort"></i></span>
+                        </th>
+
+                        <th ng-click="orderByField='userCreate'; reverseSort = !reverseSort">
+                            <!--Created by-->
+                            {{site.col_createdby}} <span ng-show="orderByField == 'userCreate'"><i class="fa fa-arrow-up" ng-show="!reverseSort"></i><i class="fa fa-arrow-down" ng-show="reverseSort"></i></span>
+                        </th>
+                        <th ng-click="orderByField='dateCreate'; reverseSort = !reverseSort">
+                            <!--Created date-->
+                            {{site.col_createddate}} <span ng-show="orderByField == 'dateCreate'"><i class="fa fa-arrow-up" ng-show="!reverseSort"></i><i class="fa fa-arrow-down" ng-show="reverseSort"></i></span>
+                        </th>
+
+                        <th ng-click="orderByField='userUpdate'; reverseSort = !reverseSort">
+                            <!-- Updated by -->
+                            {{site.col_updatedby}} <span ng-show="orderByField == 'userUpdate'"><i class="fa fa-arrow-up" ng-show="!reverseSort"></i><i class="fa fa-arrow-down" ng-show="reverseSort"></i></span>
+                        </th>
+                        <th ng-click="orderByField='dateUpdate'; reverseSort = !reverseSort">
+                            <!--Updated date-->
+                            {{site.col_updateddate}} <span ng-show="orderByField == 'dateUpdate'"><i class="fa fa-arrow-up" ng-show="!reverseSort"></i><i class="fa fa-arrow-down" ng-show="reverseSort"></i></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="function in functions| filter:searchFunction |orderBy:orderByField:reverseSort" ng-click="SelectFunction(function)" ng-class="{selected: function == selectedFunction}" context-menu="functionMenu" context-menu-on="contextmenu">
+                        <!--<td>{{function.functionID}}</td>-->
+                        <td>{{function.functionName}}</td>
+                        <td>{{function.functDescription}}</td>
+                        <td>{{function.idx}}</td>
+                        <td>{{function.status}}</td>
+                        <td>{{function.userCreate}}</td>
+                        <td>{{function.dateCreate | date: 'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{function.userUpdate}}</td>
+                        <td>{{function.dateUpdate | date: 'dd/MM/yyyy HH:mm'}}</td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+    <!-- function modal -->
+    <div class="modal fade" id="modalFunction">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--function Information-->
+                    <h4 class="modal-title">{{site.md_title}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- function code & name-->
+                    <div class="row">
+                        <!--
+    <div class="col-sm-4">
+
+        <div class="form-group">
+            <label>Code</label>
+            <input ng-model="functionCode" type="text" class="form-control" placeholder="Code ...">
+        </div>
+
+                    </div>
+                            -->
+                        <div class="col-sm-8">
+                            @*<div class="form-group">
+                                <label>{{site.col_name}}</label>
+                                <input ng-model="functionName" type="text" class="form-control" placeholder="{{site.col_name}} ...">
+                            </div>*@
+
+                            @*20200616*@
+                            <div class="form-group">
+                                <label>{{site.col_name}}</label> <span class="required">*</span>
+                                <input name="functionName"
+                                       ng-model="functionName"
+                                       type="text"
+                                       class="form-control"
+                                       placeholder={{site.col_name}}
+                                       ng-keyup="EnableSavebtn()"
+                                       required />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.function code & name-->
+                    <!-- function description -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>{{site.col_description}}</label>
+                                <textarea  ng-model="functionDesc" rows="2" class="form-control" placeholder="{{site.col_description}} ..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.function description -->
+                    <!-- function IDX & Status-->
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>{{site.col_idx}}</label>
+                                <input  ng-model="functionIdx" value="1" type="number" class="form-control" placeholder="{{site.col_idx}} ...">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>{{site.col_status}}</label>
+                                <select class="form-control" ng-model="functionStatus">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                       
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.function IDX & Status -->
+                </div>
+                <div class="modal-footer right-content-between">            
+                    <button ng-click=SaveChanges()
+                            type="button"
+                            class="btn btn-primary"
+                            ng-disabled="IsDisabledSaveBtn"
+                            >
+                        {{site.btnsave}}
+                    </button>
+
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{site.btnclose}}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- /.function modal -->
+
+
+</div> <!-- ng-app -->
+
+<script src="~/js/pages/Function/FunctionController.js"></script>
+<style>
+    .required {
+        color: red;
+    }
+</style>
+
+@*<script>
+    var data;
+    var root = angular.module('rootApp', ['masterApp', 'functionApp']);
+    var app = angular.module('functionApp', ['ngSanitize', 'ui.select', 'ui.bootstrap.contextMenu', 'ngTable']);
+    app.controller('functionCtrl', function ($scope, $http, $interval, NgTableParams ) {
+        $scope.currentLang = null;
+        $scope.functionMenu = [];
+
+        //Set timer to tracking language changes
+        $http.get("/lang/" + currentLang + '.functions.json')
+            .then(function (response) {
+            $scope.site = response.data;
+                $scope.menuInit();
+            });
+        
+        $interval(function () {
+            if (currentLang != $scope.currentLang) {
+                $scope.currentLang = currentLang;
+                $http.get("/lang/" + currentLang + '.functions.json')
+                    .then(function (response) {
+                        $scope.site = response.data; 
+                        $scope.menuInit();
+                    });
+                
+            }
+        }, 1000);
+
+        $scope.user = getSession('ee11cbb19052e40b07aac0ca060c23ee');
+        $scope.user = JSON.parse($scope.user);
+        // Get projects list
+        $http.get(apiHost + 'admproject')
+            .then(function (response) {
+                $scope.projects = response.data;
+                //console.log($scope.projects);
+                // If has parameter: project
+                if ("'@ViewBag.projectId'" != null) {
+                    let index = $scope.projects.findIndex(project => project.projectID === '@ViewBag.projectId');
+                    if ($scope.projects[index] != null) {
+                        $scope.LoadFunctions($scope.projects[index]);
+                    }
+                    
+                }
+                //.If has parameter: project
+            });
+
+        //$('#tableFunction').dataTable();
+        // Load Functions
+        $scope.LoadFunctions = function (project) {
+            $http.get(apiHost + 'admfunction/GetFunctionsByProjectID?id=' + project.projectID)
+                .then(function (response) {
+                    $scope.selectedProject = project;
+                    $scope.functions = response.data;
+                    data = response.data;
+                    $scope.tableParams = new NgTableParams({}, { dataset: data });  
+
+                });
+        }
+        //Select Function
+        $scope.SelectFunction = function (funct) {
+            $scope.selectedFunction = funct;
+
+            $scope.functionCode = funct.functionID;
+            $scope.functionName = funct.functionName;
+            $scope.functionDesc = funct.functDescription;
+            $scope.functionStatus = funct.status;
+            $scope.functionIdx = funct.idx;
+        }
+        // New function function
+        $scope.NewFunction = function () {
+            $('#modalFunction').modal('show');
+            $scope.selectedFunction = null;
+            $scope.functionCode = null;
+            $scope.functionName = null;
+            $scope.functionDesc = null;
+            $scope.functionStatus = null;
+            $scope.functionIdx = null;
+        }
+        // Edit function function
+        $scope.EditFunction = function () {
+            if ($scope.selectedFunction == null) {
+                swal($scope.site.dl_warning, $scope.site.dg_nofunction, "warning");
+            }
+            else {
+                $('#modalFunction').modal('show');
+            }
+        }
+        // Delete function function
+        $scope.DeleteFunction = function () {
+            if ($scope.selectedFunction == null) {
+                swal($scope.site.dl_warning, $scope.site.dg_nofunction, "warning");
+            }
+            else {
+                swal({
+                    title: $scope.site.dl_confirm,
+                    text: $scope.site.dl_notice,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55", confirmButtonText: $scope.site.btn_ok,
+                    cancelButtonText: $scope.site.btncancel,
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $http.delete(apiHost + 'admfunction/deleteFunction?functionID=' + $scope.selectedFunction.functionID, null, 'application/json').then(function (response) {
+
+                                // This function handles success
+                                swal($scope.site.dg_success, $scope.site.dl_deletesuccess, "success");
+                                let index = $scope.functions.findIndex(funct => funct.functionID === $scope.function.functionID);
+                                $scope.functions.splice(index, 1);
+
+                                // alert(response.data);
+                            }, function (response) {
+                                // this function handles error
+                                swal("Error!", response.data, "error");
+                            });
+
+                            //------------------
+
+                        } else {
+                            //swal("Cancelled", "Cancelled!", "error");
+                        }
+                    });
+            }
+        }
+        //Save changes
+        $scope.SaveChanges = function () {
+            // If create project
+            if ($scope.selectedFunction == null) {
+                $scope.function = {};
+                $scope.function.functionID = $scope.functionCode;
+                $scope.function.projectID = $scope.selectedProject.projectID;
+                $scope.function.functionName = $scope.functionName;
+                $scope.function.description = $scope.functionDesc;
+                $scope.function.idx = $scope.functionIdx;
+                $scope.function.status = $scope.functionStatus;
+                $scope.function.userCreate = $scope.user.userID;
+                $scope.function.dateCreate = new Date();
+
+                $http.post(apiHost + 'admfunction/', JSON.stringify($scope.function), 'application/json').then(function (response) {
+                    // This function handles success
+                    //console.log(response);
+                    // if create successfully
+                    //functDescription
+                    $scope.function = response.data;
+                    $scope.functions.push(response.data);
+                    data.push(response.data);
+                
+                    $scope.function = null;
+                    $('#modalFunction').modal('hide');
+                    swal("Success", "Function has been saved successfully", "success");
+                    // alert(response.data);
+                }, function (response) {
+                    // this function handles error
+                    if (response.status == 500) {
+                        swal("Error", response.data, "error");
+                    }
+                    else {
+                        swal("Error: " + response.data.title, response.data.errors.FunctionName[0], "error");
+                    }
+                    // console.log(response );
+                });
+
+                //------------------
+            }
+            // If update project
+            else {
+                $scope.function = $scope.selectedFunction;
+                // $scope.project.projectID = $scope.projectCode;
+                $scope.function.functionName = $scope.functionName;
+                $scope.function.description = $scope.functionDesc;
+                $scope.function.idx = $scope.functionIdx;
+                $scope.function.status = $scope.functionStatus;
+                $scope.function.userUpdate = $scope.user.userID;
+                $scope.function.dateUpdate = new Date();
+
+                $http.put(apiHost + 'admfunction/UpdateFunction?funcID=' + $scope.function.functionID, JSON.stringify($scope.function), 'application/json').then(function (response) {
+                    // This function handles success
+                    //console.log(response);
+                    // if update successfully
+                    let index = $scope.functions.findIndex(funct => funct.functionID === $scope.functions.functionID);
+                    $scope.functions[index] = response.data;
+                    $scope.functions[index].functDescription = response.data.description;
+                    $scope.function = null;
+                    $('#modalFunction').modal('hide');
+                    swal("Success", "Function has been saved successfully", "success");
+                    // alert(response.data);
+                }, function (response) {
+                    // this function handles error
+                    if (response.status != 400) {
+                        swal("Error", response.data, "error");
+                    }
+                    else {
+                        swal("Error: " + response.data.title, response.data.errors.FunctionName[0], "error");
+                    }
+                    // console.log(response );
+                });
+
+                //------------------
+
+            }
+        }
+        $scope.CommandsList = function () {
+            if ($scope.selectedProject == null) {
+                swal('Warning', 'Please select project first', 'warning');
+            }
+            else if ($scope.selectedFunction == null) {
+                swal('Warning', 'Please select function first', 'warning');
+            }
+            else {
+                window.location.href = '/Command?projectId=' + $scope.selectedProject.projectID + '&functionId=' + $scope.selectedFunction.functionID;
+            }
+            
+        }
+        $scope.menuInit = function () {
+            //Context Menu
+            $scope.functionMenu = [
+                // NEW IMPLEMENTATION
+                {
+                    text: $scope.site.btn_new,
+                    click: function ($itemScope, $event, modelValue, text, $li) {
+                        $scope.NewFunction();
+                        console.log($itemScope.function);
+
+                    }
+                },
+                {
+                    text: $scope.site.btn_edit,
+                    click: function ($itemScope, $event, modelValue, text, $li) {
+                        $scope.SelectFunction($itemScope.function);
+                        $scope.EditFunction();
+                    }
+                },
+                {
+                    text: $scope.site.btn_delete,
+                    click: function ($itemScope, $event, modelValue, text, $li) {
+                        $scope.SelectFunction($itemScope.function);
+                        $scope.DeleteFunction();
+                    }
+                },
+                {
+                    text: $scope.site.btn_commands,
+                    click: function ($itemScope, $event, modelValue, text, $li) {
+                        $scope.SelectFunction($itemScope.function);
+                        $scope.CommandsList();
+                    }
+                }
+
+            ];
+            //Menu context
+        }
+  
+
+    });
+
+    app.filter('propsFilter', function () {
+        return function (items, props) {
+            var out = [];
+
+            if (angular.isArray(items)) {
+                var keys = Object.keys(props);
+
+                items.forEach(function (item) {
+                    var itemMatches = false;
+
+                    for (var i = 0; i < keys.length; i++) {
+                        var prop = keys[i];
+                        var text = props[prop].toLowerCase();
+                        if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                            itemMatches = true;
+                            break;
+                        }
+                    }
+
+                    if (itemMatches) {
+                        out.push(item);
+                    }
+                });
+            } else {
+                // Let the output be the input untouched
+                out = items;
+            }
+
+            return out;
+        };
+    });
+
+</script>*@
